@@ -1,5 +1,6 @@
 package com.xweather.android.ui.place
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.xweather.android.MainActivity
 import com.xweather.android.R
+import com.xweather.android.ui.weather.WeatherActivity
 import kotlinx.android.synthetic.main.fragment_place.*
 
 class PlaceFragment : Fragment() {
@@ -29,6 +32,18 @@ class PlaceFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        if (activity is MainActivity && viewModel.isPlaceSaved()) {
+            val savedPlace = viewModel.getSavedPlace()
+            val intent=Intent(context,WeatherActivity::class.java).apply {
+                putExtra("location_lng", savedPlace.location.lng)
+                putExtra("location_lat", savedPlace.location.lat)
+                putExtra("place_name", savedPlace.name)
+            }
+            startActivity(intent)
+            activity?.finish()
+            return
+        }
+
         var linearLayoutManager = LinearLayoutManager(activity)
         recyclerView.layoutManager = linearLayoutManager
         adapter = PlaceAdapter(this, viewModel.placeList)

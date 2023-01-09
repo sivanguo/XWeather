@@ -1,6 +1,7 @@
 package com.xweather.android.logic
 
 import androidx.lifecycle.liveData
+import com.xweather.android.logic.dao.PlaceDao
 import com.xweather.android.logic.model.Place
 import com.xweather.android.logic.model.Weather
 import com.xweather.android.logic.network.XWeatherNetwork
@@ -11,6 +12,10 @@ import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
 
 object Repository {
+
+    fun savePlace(place: Place) = PlaceDao.savePlace(place)
+    fun getSavedPlace() = PlaceDao.getSavedPlace()
+    fun isPlaceSaved() = PlaceDao.isPlaceSaved()
 
     fun searchPlaces(query: String) = fire(Dispatchers.IO) {
         val placeReponse = XWeatherNetwork.searchPlaces(query)
